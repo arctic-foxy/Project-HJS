@@ -1,0 +1,74 @@
+USE railway; -- Isso seleciona o banco correto(ou seta ele como padrão)
+
+-- 1. CRIAÇÃO DA TABELA DE PRODUTOS
+CREATE TABLE produtos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    preco DECIMAL(10,2) NOT NULL,
+    categoria ENUM('Pizza Salgada', 'Pizza Doce', 'Porção', 'Bebida', 'Sobremesa') NOT NULL,
+    disponivel BOOLEAN DEFAULT TRUE
+);
+
+-- 2. CRIAÇÃO DA TABELA DE RESERVAS
+CREATE TABLE reservas (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome_cliente VARCHAR(100) NOT NULL,
+    telefone_cliente VARCHAR(20),
+    data_reserva DATE NOT NULL,
+    hora_reserva TIME NOT NULL,
+    quantidade_pessoas INT NOT NULL,
+    status_reserva ENUM('Pendente', 'Confirmada', 'Cancelada', 'Finalizada') DEFAULT 'Pendente'
+);
+
+-- 3. CRIAÇÃO DA TABELA DE PEDIDOS
+CREATE TABLE pedidos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    data_pedido DATETIME DEFAULT CURRENT_TIMESTAMP,
+    cliente_nome VARCHAR(100) NOT NULL,
+    tipo_pedido ENUM('Delivery', 'Retirada', 'Mesa') NOT NULL,
+    endereco_entrega VARCHAR(255),
+    valor_total DECIMAL(10,2) DEFAULT 0.00,
+    status_pedido ENUM('Recebido', 'Na Cozinha', 'Em Entrega', 'Concluído') DEFAULT 'Recebido'
+);
+
+-- 4. CRIAÇÃO DA TABELA DE ITENS DO PEDIDO
+CREATE TABLE itens_pedido (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    pedido_id INT,
+    produto_id INT,
+    quantidade INT NOT NULL,
+    subtotal DECIMAL(10,2),
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);
+
+-- 5. INSERÇÃO DOS PRODUTOS (CARDÁPIO)
+INSERT INTO produtos (nome, descricao, preco, categoria) VALUES 
+('Calabresa Especial', 'Molho, mussarela, calabresa fatiada e cebola.', 45.00, 'Pizza Salgada'),
+('Frango com Catupiry', 'Frango desfiado, milho e o legítimo Catupiry.', 48.90, 'Pizza Salgada'),
+('Portuguesa', 'Presunto, ovos, cebola, ervilha e azeitona.', 50.00, 'Pizza Salgada'),
+('Chocolate com Morango', 'Chocolate ao leite com morangos frescos.', 55.00, 'Pizza Doce'),
+('Romeu e Julieta', 'Mussarela e goiabada cascão.', 42.00, 'Pizza Doce'),
+('Batata Frita com Queijo', '500g de batata com cheddar e bacon.', 35.00, 'Porção'),
+('Anéis de Cebola', 'Cebolas empanadas crocantes.', 28.00, 'Porção'),
+('Coca-Cola 2L', 'Gelada.', 14.00, 'Bebida'),
+('Suco de Laranja 500ml', 'Natural e fresco.', 10.00, 'Bebida'),
+('Cerveja Artesanal', 'Pilsen local 600ml.', 18.00, 'Bebida'),
+('Petit Gâteau', 'Com sorvete de baunilha.', 22.00, 'Sobremesa'),
+('Pudim de Leite Moça', 'A receita clássica.', 15.00, 'Sobremesa');
+
+--6. Criação do sistema de Logins
+CREATE TABLE usuarios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL, 
+    tipo ENUM('CLIENTE', 'COZINHA', 'ADM') DEFAULT 'CLIENTE',
+    telefone VARCHAR(20),
+    endereco_padrao VARCHAR(255)
+);
+
+--7. Conexao entre pedidos e os usuarios
+ALTER TABLE pedidos ADD COLUMN usuario_id INT;
+ALTER TABLE pedidos ADD FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
