@@ -72,3 +72,14 @@ CREATE TABLE usuarios (
 --7. Conexao entre pedidos e os usuarios
 ALTER TABLE pedidos ADD COLUMN usuario_id INT;
 ALTER TABLE pedidos ADD FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
+
+--8. Adiciona campos de avaliação e pagamento na tabela de pedidos
+ALTER TABLE pedidos 
+ADD COLUMN forma_pagamento ENUM('Cartão', 'Pix', 'Dinheiro') DEFAULT 'Pix',
+ADD COLUMN avaliacao_nota INT CHECK (avaliacao_nota BETWEEN 1 AND 5),
+ADD COLUMN avaliacao_comentario TEXT,
+ADD COLUMN observacoes_gerais TEXT;
+
+--9. Adiciona campo de observação em cada item (ex: "Sem cebola")
+ALTER TABLE itens_pedido 
+ADD COLUMN observacao_item VARCHAR(255);

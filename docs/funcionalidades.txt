@@ -1,0 +1,5 @@
+Cliente - Ver cardapio,fazer pedido, ver antigos pedidos,ver progresso do pedido,avaliar pedido,login,definir formas de pagamento,pedir cancelamento se ainda nao sendo produzido,recuperaçao de senha
+
+Cozinha - Ver pedidos em ordem de realizados(antigos para novos),ver qual produtos tem o pedido e suas observaçoes,definir o pedido como sendo preparado ou pronto
+
+Adminstraçao - Ver estados dos pedidos,ver ultimos pedidos,cadastrar,remover ou alterar produtos, ver tabela de lucros (com filtros de dia,semana e mes)
